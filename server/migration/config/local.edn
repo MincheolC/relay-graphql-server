@@ -1,0 +1,6 @@
+{:adapter       "mysql8"
+ :username      "dev"
+ :password      "1234"
+ :server-name   "localhost"
+ :port-number   3306
+ :database-name "relay"}

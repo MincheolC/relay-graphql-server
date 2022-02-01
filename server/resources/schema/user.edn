@@ -1,0 +1,23 @@
+{:objects   {:User
+             {:description "유저 정보"
+              :fields      {:id       {:type ID}
+                            :name     {:type String}
+                            :phone    {:type String}
+                            :articles {:type (list :Article)
+                                       :resolve :get-articles-by-user-id}}}}
+ :queries   {:getUsers
+             {:type    (list (non-null :User))
+              :resolve :get-users}}
+
+ :mutations {:createUser
+             {:type    :User
+              :args    {:name  {:type (non-null String)}
+                        :phone {:type (non-null String)}}
+              :resolve :create-user}
+
+             :updateUser
+             {:type    :User
+              :args    {:id    {:type (non-null ID)}
+                        :name  {:type String}
+                        :phone {:type String}}
+              :resolve :update-user}}}

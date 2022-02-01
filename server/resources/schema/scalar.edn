@@ -1,0 +1,4 @@
+{:scalars
+ {:DateTime
+  {:parse :datetime-parser
+   :serialize :datetime-serializer}}}

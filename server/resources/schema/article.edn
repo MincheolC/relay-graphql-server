@@ -1,0 +1,16 @@
+{:objects {:Article
+           {:description "아티클"
+            :fields      {:id    {:type ID}
+                          :title  {:type String}
+                          :author {:type User}
+                          :likeCount {:type Int}
+                          :createdAt {:type :DateTime}}}}
+ :queries {:getArticles
+           {:type    (list (non-null :Article))
+            :resolve :get-articles}}
+
+ :mutations {:updateArticle
+             {:type :Article
+              :args {:id {:type (non-null ID)}
+                     :likeCount {:type (non-null Int)}}
+              :resolve :update-article}}}

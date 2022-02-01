@@ -1,0 +1,13 @@
+{:db/mysql      {:minimum-idle      1
+                 :maximum-pool-size 10
+                 :adapter           "mysql8"
+                 :username          "dev"
+                 :password          "1234"
+                 :server-name       "localhost"
+                 :database-name     "relay"
+                 :port-number       3306}
+ :app/config    {:profile "dev"}
+ :handler/app   {:db     #ig/ref :db/mysql
+                 :config #ig/ref :app/config}
+ :server/jetty  {:port    8080
+                 :handler #ig/ref :handler/app}}
