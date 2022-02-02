@@ -16,6 +16,7 @@ type Mutation {
 }
 
 type Query {
+  User(id: ID!): User!
   Users: [User!]
   getArticles: [Article!]
 }

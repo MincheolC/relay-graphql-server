@@ -21,6 +21,9 @@
     (when-let [result (execute-one! ds query)]
       (update result :id encode-user-id))))
 
+(defn get-user [{ds :db} {id :id} _]
+  (get-user-by-id ds (decode-user-id id)))
+
 (defn get-users [{ds :db} _ _]
   (let [query {:select [:*]
                :from [:users]}]
@@ -68,6 +71,7 @@
 (def resolver-map {:get-users get-users
                    :get-followers get-followers
                    :get-followees get-followees
+                   :get-user get-user
                    :create-user create-user
                    :update-user update-user})
 

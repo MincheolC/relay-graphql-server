@@ -1,17 +1,22 @@
 {:objects   {:User
              {:description "유저 정보"
-              :fields      {:id       {:type ID}
-                            :name     {:type String}
-                            :phone    {:type String}
-                            :followers {:type (list :User)
+              :fields      {:id        {:type ID}
+                            :name      {:type String}
+                            :phone     {:type String}
+                            :followers {:type    (list :User)
                                         :resolve :get-followers}
-                            :followees {:type (list :User)
+                            :followees {:type    (list :User)
                                         :resolve :get-followees}
-                            :articles {:type (list :Article)
-                                       :resolve :get-articles-by-user-id}}}}
+                            :articles  {:type    (list :Article)
+                                        :resolve :get-articles-by-user-id}}}}
  :queries   {:Users
              {:type    (list (non-null :User))
-              :resolve :get-users}}
+              :resolve :get-users}
+
+             :User
+             {:type (non-null :User)
+              :args {:id {:type (non-null ID)}}
+              :resolve :get-user}}
 
  :mutations {:createUser
              {:type    :User
