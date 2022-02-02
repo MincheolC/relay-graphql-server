@@ -1,0 +1,30 @@
+"""아티클"""
+type Article {
+  author: User
+  createdAt: DateTime
+  id: ID
+  likeCount: Int
+  title: String
+}
+
+scalar DateTime
+
+type Mutation {
+  createUser(name: String!, phone: String!): User
+  updateArticle(id: ID!, likeCount: Int!): Article
+  updateUser(id: ID!, name: String, phone: String): User
+}
+
+type Query {
+  Users: [User!]
+  getArticles: [Article!]
+}
+
+"""유저 정보"""
+type User {
+  articles: [Article]
+  id: ID
+  name: String
+  phone: String
+}
+
