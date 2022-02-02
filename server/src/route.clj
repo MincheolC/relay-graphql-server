@@ -1,13 +1,21 @@
 (ns route
   (:require [graphql.route :as gr]
             [muuntaja.core :as m]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.reload :refer [wrap-reload]]
-            [ring.util.response :refer [response]]
             [reitit.ring :refer [router ring-handler]]
             [reitit.ring.middleware.muuntaja :as muuntaja]
             [reitit.ring.middleware.parameters :as params]
+            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.cors :as cors]
+            [ring.middleware.not-modified :refer [wrap-not-modified]]
+            [ring.middleware.reload :refer [wrap-reload]]
+            [ring.util.response :refer [response]]
             [ring.util.http-response :as hr]))
+
+(defn wrap-cors [handler]
+  (cors/wrap-cors handler
+                  :access-control-allow-origin #".*"
+                  :access-control-allow-methods [:get :post :put :delete :patch]))
 
 (defn app
   [context]
@@ -26,4 +34,7 @@
               :middleware [params/parameters-middleware
                            muuntaja/format-middleware]}})
     nil
-    {:middleware [wrap-reload]}))
+    {:middleware [wrap-reload
+                  wrap-cors
+                  wrap-content-type
+                  wrap-not-modified]}))
