@@ -23,6 +23,8 @@ type Query {
 """유저 정보"""
 type User {
   articles: [Article]
+  followees: [User]
+  followers: [User]
   id: ID
   name: String
   phone: String

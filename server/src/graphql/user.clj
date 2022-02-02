@@ -45,10 +45,31 @@
       (get-user-by-id ds id))
     (get-user-by-id ds id)))
 
+(defn get-followees
+  "유저가 팔로우하는 사람들"
+  [{ds :db} _ {user-id :id}]
+  (let [query {:select [:u.*]
+               :from [[:follows :f]]
+               :inner-join [[:users :u] [:= :f.followee_id :u.id]]
+               :where [:= :f.user_id (decode-user-id user-id)]}]
+    (->> (execute! ds query)
+         (map #(update % :id encode-user-id)))))
+
+(defn get-followers
+  "유저를 팔로우하는 사람들"
+  [{ds :db} _ {user-id :id}]
+  (let [query {:select [:u.*]
+               :from [[:follows :f]]
+               :inner-join [[:users :u] [:= :f.user_id :u.id]]
+               :where [:= :f.followee_id (decode-user-id user-id)]}]
+    (->> (execute! ds query)
+         (map #(update % :id encode-user-id)))))
+
 (def resolver-map {:get-users get-users
+                   :get-followers get-followers
+                   :get-followees get-followees
                    :create-user create-user
                    :update-user update-user})
-
 
 (comment
   (re-pattern (str encode-prefix "(\\d+)"))

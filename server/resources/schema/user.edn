@@ -3,6 +3,10 @@
               :fields      {:id       {:type ID}
                             :name     {:type String}
                             :phone    {:type String}
+                            :followers {:type (list :User)
+                                        :resolve :get-followers}
+                            :followees {:type (list :User)
+                                        :resolve :get-followees}
                             :articles {:type (list :Article)
                                        :resolve :get-articles-by-user-id}}}}
  :queries   {:Users
