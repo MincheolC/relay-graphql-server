@@ -5,7 +5,7 @@
                             :phone    {:type String}
                             :articles {:type (list :Article)
                                        :resolve :get-articles-by-user-id}}}}
- :queries   {:getUsers
+ :queries   {:Users
              {:type    (list (non-null :User))
               :resolve :get-users}}
 
