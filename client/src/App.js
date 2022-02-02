@@ -1,45 +1,49 @@
 import React from 'react';
 import './App.css';
-import fetchGraphQL from './fetchGraphQL';
+import graphql from 'babel-plugin-relay/macro';
+import {
+  RelayEnvironmentProvider,
+  loadQuery,
+  usePreloadedQuery,
+} from 'react-relay/hooks';
+import RelayEnvironment from './RelayEnvironment';
 
-const { useState, useEffect } = React;
+const { Suspense } = React;
 
-function App() {
-  const [userNames, setUserNames] = useState(null);
+const getUserNamesQuery = graphql`
+  query AppUserNamesQuery {
+    Users {
+      name
+    }
+  }
+`
 
-  useEffect(() => {
-    let isMounted = true;
-    fetchGraphQL(`
-      query GetUsersNameQuery {
-        Users {
-          name
-        }
-      }
-    `).then(response => {
-      // Avoid updating state if the component unmounted before the fetch completes
-      if (!isMounted) {
-        return;
-      }
-      const data = response.data;
-      setUserNames(data.Users.map(v => v.name))
-    }).catch(error => {
-      console.error(error);
-    });
+// Immediately load the query as our app starts. For a real app, we'd move this
+// into our routing configuration, preloading data as we transition to new routes.
+const preloadedQuery = loadQuery(RelayEnvironment, getUserNamesQuery, {
+  /* query variables */
+});
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+function App(props) {
+  const data = usePreloadedQuery(getUserNamesQuery, props.preloadedQuery);
 
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          {userNames != null ? `User Names: ${userNames}` : "Loading"}
-        </p>
+        <p>{data.Users.map(v => v.name)}</p>
       </header>
     </div>
   );
 }
 
-export default App;
+function AppRoot(props) {
+  return (
+    <RelayEnvironmentProvider environment={RelayEnvironment}>
+      <Suspense fallback={'Loading...'}>
+        <App preloadedQuery={preloadedQuery} />
+      </Suspense>
+    </RelayEnvironmentProvider>
+  );
+}
+
+export default AppRoot;
